@@ -1,7 +1,7 @@
 #ifndef __IO_HPP__
 #define __IO_HPP__
 
-#include    <common/type.hpp>
+#include    <sys/type.hpp>
 #include    <common/property.hpp>
 
 namespace os

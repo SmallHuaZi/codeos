@@ -6,6 +6,17 @@
 namespace os
 {
 
+    namespace internal
+    {
+        typedef     unsigned long long  __uid_t;
+        typedef     unsigned long long  __tid_t;
+        typedef     unsigned long long  __pid_t;
+        typedef     unsigned long long  __time_t;
+        
+    } // namespace internal
+
+
+
     typedef     char        i8;
     typedef     short       i16;
     typedef     int         i32;
@@ -21,14 +32,14 @@ namespace os
     typedef     unsigned int    usize;
 #else
 #if     defined(__X86_64__)
-    typedef     long long               isize;
-    typedef     unsigned long long      usize;
+    typedef     long long               isize;      // depends paltform
+    typedef     unsigned long long      usize;      // depends platform
     typedef     long long               i64;
     typedef     unsigned long long      u64;
 #endif
 #endif
 
-}
+} // namespace os
 
 
 #endif

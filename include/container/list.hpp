@@ -43,8 +43,8 @@ namespace os
 
         typedef     _List_node      _Node_type;
         typedef     _List_node *    _Node_ptr;
-        typedef     _List_node_base     _Node_base_type;
-        typedef     _List_node_base    *_Node_base_ptr;
+        typedef     internal::_List_node_base     _Node_base_type;
+        typedef     internal::_List_node_base    *_Node_base_ptr;
 
 
         struct _List_iterator
@@ -107,49 +107,49 @@ namespace os
         __ALWAYS_INLINE
         void
         add_front(_Node_ptr fresh)
-        { __list_add_front(_M_head._M_next, fresh); }
+        { internal::__list_add_front(_M_head._M_next, fresh); }
 
 
         __ALWAYS_INLINE
         void
         add_tail(_Node_ptr fresh)
-        { __list_add_tail(_M_head._M_prev, fresh); }
+        { internal::__list_add_tail(_M_head._M_prev, fresh); }
 
 
         __ALWAYS_INLINE
         void
         replace(itr fresh, itr stale)
-        { __list_replace(fresh._M_data, stale._M_data); }
+        { internal::__list_replace(fresh._M_data, stale._M_data); }
 
 
         __ALWAYS_INLINE
         void
         replace(_Node_ptr fresh, _Node_ptr stale)
-        { __list_replace(fresh, stale); }
+        { internal::__list_replace(fresh, stale); }
 
 
         __ALWAYS_INLINE
         void
         replace(itr start, itr finish, itr start1, itr finish1)
-        { __list_range_replace(start._M_data, finish._M_data, start1._M_data, finish1._M_data); }
+        { internal::__list_range_replace(start._M_data, finish._M_data, start1._M_data, finish1._M_data); }
 
 
         __ALWAYS_INLINE
         void
         merge_front(list &other)
-        { __list_splice_front(&_M_head, &other._M_head); }
+        { internal::__list_splice_front(&_M_head, &other._M_head); }
 
 
         __ALWAYS_INLINE
         void
         merge_tail(list &other)
-        { __list_splice_tail(&_M_head, &other._M_head); }
+        { internal::__list_splice_tail(&_M_head, &other._M_head); }
 
 
         __ALWAYS_INLINE
         void
         erase(_Node_ptr entry)
-        { __list_delete(entry->_M_prev, entry->_M_next); }
+        { internal::__list_delete(entry->_M_prev, entry->_M_next); }
 
 
         __ALWAYS_INLINE
@@ -171,7 +171,7 @@ namespace os
 
 
     private:
-        _List_head        _M_head;
+        internal::_List_head        _M_head;
     };
     
 } // namespace os
