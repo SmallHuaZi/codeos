@@ -4,30 +4,27 @@
 
 namespace os
 {
+
+    /// @brief Set The Specified Byte To One 
     void
     bitmap:: 
         set(usize const pos)
     {
-        static constexpr const int USIZE_BITS = sizeof(usize) << 3;
-
         if(pos > (_M_len << 3))
             return;
 
-        u8 pos_of_byte = pos >> USIZE_BITS;
-        u8 pos_of_bit  = pos % USIZE_BITS;
+        usize pos_of_byte = pos >> 3;
+        u8 pos_of_bit  = pos % 8;
         u8 vaild_bit   = 1 << pos_of_bit;
 
-        u8 *byte_ptr = (u8 *)(_M_bit);
-        byte_ptr[pos_of_byte] |= vaild_bit;
+        u8 *data_ptr = (u8 *)_M_bit;
+        data_ptr[pos_of_byte] |= vaild_bit;
     }
 
 
 
 
-    /**   11111111
-     * x: 00011111
-     * y: 01111100 
-     */
+    /// @brief Set A Length Of Bytes From The Specified Position To One 
     void
     bitmap::
         set(usize const pos, usize const len)
@@ -37,19 +34,40 @@ namespace os
         if(1 == len) 
             return set(pos);
 
-        u8 bytes[(len >> 3) + 1];
-        std::memset(bytes, len >> 3, 0xff);
-        bytes[0] <<= pos;
+        u8 pos_of_bit = pos % 8;
+        usize pos_of_byte = pos >> 3;
+
+        usize nbytes = (len + pos_of_bit >> 3);
+        if ((len + pos_of_bit) % 8)
+            ++nbytes;
+
+        u8 bytes[nbytes];
+        std::memset(bytes, 0xff, nbytes);
+
+        bytes[0] <<= pos_of_bit;
+        if (len < (8 - pos_of_bit)) {
+            u8 ofs = 8 - pos_of_bit - len;
+            bytes[0] <<= ofs;
+            bytes[0] >>= ofs;
+        } 
+        else {
+            usize end_byte_fill_count = (len + pos_of_bit - 8) % 8;
+            if (end_byte_fill_count) {
+                bytes[nbytes - 1] >>= 8 - end_byte_fill_count;
+            }
+        }
+        
+
+        u8 *data_ptr = (u8 *)_M_bit;
+        for (usize idx {0}; idx < nbytes; ++idx) {
+            data_ptr[pos_of_byte + idx] |= bytes[idx];
+        }
     }
 
 
 
-    /**      11111111 
-     *  x:   11111000 << 3  00000000 << 8 11111110 << 1
-     *  y:   00000011 >> 6  01111111 >> 1 00000000 >> 8 
-     *  x|y: 11111011
-     *  
-     */
+
+    /// @brief Set The Spedcified Byte To Zero
     void
     bitmap::
         clear(usize const pos)
@@ -57,10 +75,10 @@ namespace os
         if(pos > (_M_len << 3))
             return;
 
-        u8 pos_of_byte = pos >> 3;
-        u8 pos_of_bit  = (pos % sizeof(u8));
+        usize pos_of_byte = pos >> 3;
+        u8 pos_of_bit = pos % 8;
         u8 high_bit   = 0xff << (pos_of_bit + 1);
-        u8 low_bit    = 0xff >> (sizeof(u8) - pos_of_bit);
+        u8 low_bit    = 0xff >> (8 - pos_of_bit);
         u8 *byte_ptr  = (u8 *)(_M_bit);
 
         high_bit |= low_bit;
@@ -69,11 +87,39 @@ namespace os
 
 
 
+    /// @brief Set A Length Of Bytes From The Specified Position To Zero
     void
     bitmap::
         clear(usize const pos, usize const len)
     {
+        if (pos > (_M_len << 3))
+            return;
 
+        usize pos_of_byte = pos >> 3; 
+        u8 pos_of_bit = (pos % 8);
+
+        usize nbytes = (len + pos_of_bit >> 3);
+        if (len + pos_of_bit % 8) 
+            ++nbytes;
+        u8 bytes[nbytes];
+        std::memset(bytes, 0, sizeof(bytes));
+
+        u8 high_bit = 0xff << (pos_of_bit + len);
+        u8 low_bit  = 0xff >> (8 - pos_of_bit);
+        bytes[0] = high_bit | low_bit;
+        if (len > (8 - pos_of_bit)) {
+            usize end_byte_clear_count = (len + pos_of_bit - 8) % 8; 
+            if (end_byte_clear_count) {
+                bytes[nbytes - 1] = 0xff;
+                bytes[nbytes - 1] >>= end_byte_clear_count;
+                bytes[nbytes - 1] <<= end_byte_clear_count;
+            }
+        }
+
+        u8 *data_ptr = (u8 *)_M_bit;
+        for (usize idx {0}; idx < nbytes; ++idx) {
+            data_ptr[pos_of_byte + idx] &= bytes[idx];
+        }
     }
 
 

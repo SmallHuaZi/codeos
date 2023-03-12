@@ -3,7 +3,7 @@
 
 #include    <common/property.hpp>
 
-#include    "__list.hpp"
+#include    "internal/__list.hpp"
 
 namespace os
 {
@@ -21,6 +21,11 @@ namespace os
         {
             value_type      _M_value_field; 
 
+
+        public:
+            _List_node(_List_node &&) = delete;
+
+            _List_node(_List_node const &) = delete;
 
             _List_node()
                 : _M_value_field(), 
@@ -52,6 +57,18 @@ namespace os
             typedef     _List_iterator      _Self;
 
 
+        public:
+            __ALWAYS_INLINE
+            _List_iterator(_Node_base_ptr *entry)
+                : _M_data(static_cast<_Node_ptr>(entry))
+            {}
+
+            _List_iterator(_List_iterator &&) = delete;
+
+            _List_iterator(_List_iterator const &) = delete;
+
+
+        public:
             __ALWAYS_INLINE
             reference
             operator*()
@@ -90,18 +107,21 @@ namespace os
             }
 
 
-            __ALWAYS_INLINE
-            _List_iterator(_Node_base_ptr *entry)
-                : _M_data(static_cast<_Node_ptr>(entry))
-            {}
-
-
         public:
             _Node_ptr   _M_data;
         };
 
 
         typedef     _List_iterator      itr;
+
+
+    public:
+        list() = default;
+
+        list(list &&) = delete;
+
+        list(list const &) = delete;
+
 
     public:
         __ALWAYS_INLINE
@@ -172,6 +192,7 @@ namespace os
 
     private:
         internal::_List_head        _M_head;
+
     };
     
 } // namespace os

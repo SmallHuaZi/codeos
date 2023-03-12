@@ -3,11 +3,11 @@
 
 namespace os
 {
-    static constexpr int    KERNEL_CODE_SEGMENT = ;
-    static constexpr int    KERNEL_DATA_SEGMENT = ;
+    static constexpr int const    KERNEL_CODE_SEGMENT = 0;
+    static constexpr int const    KERNEL_DATA_SEGMENT = 0;
 
-    static constexpr int    USER_CODE_SEGMENT = ;
-    static constexpr int    USER_DATA_SEGMENT = ;
+    static constexpr int const    USER_CODE_SEGMENT = 0;
+    static constexpr int const    USER_DATA_SEGMENT = 0;
     
 } // namespace os
 
