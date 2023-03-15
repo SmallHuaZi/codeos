@@ -1,9 +1,13 @@
 #include    <libc++/stddef.hpp>
 #include    <libc++/string.hpp>
 
+#include    <common/property.hpp>
+
 
 namespace std
 {
+
+    __AS_NAKED
     void
     memset(void *dest, char const c, size_t const n)
     {
@@ -16,6 +20,7 @@ namespace std
 	    	"mov %2, (%0, %1, 1)    \n\t"
 	    	"jmp 0b                 \n\t"
 	    	"1:"
+            "ret    \n\t"
 	    	: "=D"(dest)
 	    	: "c"(n), "a"(c)
 	    );
@@ -43,6 +48,8 @@ namespace std
     }
 
 
+
+    __AS_NAKED
     int 
     memcmp(void const *x, void const *y, size_t const n)
     {
@@ -59,6 +66,7 @@ namespace std
 	    	"sub %%edx, %%eax	\n\t"
 	    	"mov %%eax, %0	\n\t"
 	    	"0:				\n\t"
+            "ret    \n\t"
 	    	: "=r"(res)
 	    	: "D"(x), "S"(y), "c"(n)
 	    );
@@ -89,8 +97,11 @@ namespace std
     
 
     /*
-        Maybe is`s better to use an inline function
+        Maybe is's better to use an inline function,
+        But i'm going to write it this way just to make
+        the header a little bit clearer
     */
+   __AS_NAKED
     void
     memcpy(void *dest, void const *src, size_t const n)
     {
@@ -98,6 +109,7 @@ namespace std
         asm volatile (
             "cld    \n\t"
             "rep movsb  \n\t"
+            "ret    \n\t"
             : "=D"(dest)
             : "S"(src), "c"(n)
         );
@@ -117,6 +129,8 @@ namespace std
     }
 
 
+
+    __AS_NAKED
     void
     memmove(void *dest, void const *src, size_t n)
     {
@@ -134,6 +148,7 @@ namespace std
             "cld    \n\t"
 		    "1:		\n\t"
             "repz movsb"
+            "ret    \n\t"
             : "=D"(dest)
             : "S"(src), "c"(n)
         );

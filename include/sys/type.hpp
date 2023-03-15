@@ -1,7 +1,7 @@
 #ifndef __STD_TYPE_HPP__
 #define __STD_TYPE_HPP__
 
-#define __X86_64__
+#include    <arch.hpp>
 
 namespace os
 {
@@ -27,15 +27,15 @@ namespace os
     typedef     unsigned int        u32;
 
 
-#if     defined(__X86__)
-    typedef     int             isize;
-    typedef     unsigned int    usize;
-#else
-#if     defined(__X86_64__)
+#if defined(__64BIT) && __64BIT == 1ul
     typedef     long long               isize;      // depends paltform
     typedef     unsigned long long      usize;      // depends platform
     typedef     long long               i64;
     typedef     unsigned long long      u64;
+#else
+#if defined(__32BIT)
+    typedef     int             isize;
+    typedef     unsigned int    usize;
 #endif
 #endif
 

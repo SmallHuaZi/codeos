@@ -2,6 +2,7 @@
 #define __STRING_HPP__
 
 #include    "ctype.hpp"
+#include    "common/property.hpp"
 
 namespace std 
 {
